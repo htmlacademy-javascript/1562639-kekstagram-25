@@ -1,21 +1,20 @@
 //Функция, возвращающая случайное целое число из переданного диапазона включительно
-// https://learn.javascript.ru/task/random-int-min-max
-const RANDOM_INTEGER = function (min, max) {
-  const RAND = min + Math.random() * (max + 1 - min);
-  return Math.floor(RAND);
+
+const randomInteger = function (min, max) {
+  if (min >= 0 && max >= min) {
+    return Math.floor(min + Math.random() * (max + 1 - min));
+  }
+
+  throw new Error ('Invalid Input Parameters');
 };
 
-RANDOM_INTEGER(1, 5);
+randomInteger(1, 5);
 
 
 //Функция для проверки максимальной длины строки
-const STRING = 'какой-то комментарий';
-const GET_STRING_LENGTH = function (maxStringLength) {
-  if (STRING.length > maxStringLength) {
 
-    // eslint-disable-next-line no-alert
-    alert(`Слишком длинный комментарий, максимальное количество символов ${  maxStringLength}`);
-  }
+const checkStringLength = function (string, maxStringLength) {
+  return string.length <= maxStringLength;
 };
 
-GET_STRING_LENGTH(8);
+checkStringLength('какой-то комментарий', 8);
