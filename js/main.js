@@ -9,11 +9,13 @@ RANDOM_INTEGER(1, 5);
 
 
 //Функция для проверки максимальной длины строки
-let string = 'какой-то комментарий';
-let getStringLength = function (maxStringLength) {
-  if (string.length > maxStringLength) {
-    console.log('Слишком длинный комментарий, максимальное количество символов ' + maxStringLength);
+const STRING = 'какой-то комментарий';
+const GET_STRING_LENGTH = function (maxStringLength) {
+  if (STRING.length > maxStringLength) {
+
+    // eslint-disable-next-line no-alert
+    alert(`Слишком длинный комментарий, максимальное количество символов ${  maxStringLength}`);
   }
 };
 
-getStringLength(8);
+GET_STRING_LENGTH(8);
