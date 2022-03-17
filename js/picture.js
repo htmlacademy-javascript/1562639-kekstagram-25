@@ -7,11 +7,12 @@ const userPictureTemplate = document.querySelector('#picture')
 
 const userPictureFragment = document.createDocumentFragment();
 
-photoMocks.forEach(({url, likes, comments}) => {
+photoMocks.forEach(({url, likes, comments}, index) => {
   const userPictureElement = userPictureTemplate.cloneNode(true);
   userPictureElement.querySelector('.picture__img').src = url;
   userPictureElement.querySelector('.picture__likes').textContent = likes;
   userPictureElement.querySelector('.picture__comments').textContent = comments.length;
+  userPictureElement.id = index;
   userPictureFragment.appendChild(userPictureElement);
 });
 
