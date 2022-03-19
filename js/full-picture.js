@@ -3,13 +3,16 @@ import './picture.js';
 
 const thumbnails = document.querySelectorAll('.picture');
 const bigPicture = document.querySelector('.big-picture');
-const сommentList = bigPicture.querySelector('.social__comments');
-const commentItem = bigPicture.querySelector('.social__comment');
+
 const closeModalButton = document.querySelector('.big-picture__cancel');
 
 // eslint-disable-next-line no-shadow
 function addThumbnailClickHandler(thumbnail, photoData) {
   thumbnail.addEventListener('click', () => {
+    const сommentList = bigPicture.querySelector('.social__comments');
+    const commentItem = bigPicture.querySelector('.social__comment');
+    сommentList.textContent = '';
+    //commentItem.textContent = '';
     document.querySelector('body').classList.add('modal-open');
     bigPicture.classList.remove('hidden');
     bigPicture.querySelector('.social__comment-count').classList.add('hidden');
