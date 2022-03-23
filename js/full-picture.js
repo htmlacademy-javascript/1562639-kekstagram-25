@@ -1,13 +1,13 @@
 import { photoMocks } from './data.js';
 import './picture.js';
+import './close-picture.js';
 
 const thumbnails = document.querySelectorAll('.picture');
 const bigPicture = document.querySelector('.big-picture');
 const commentItem = bigPicture.querySelector('.social__comment');
 
-const closeModalButton = document.querySelector('.big-picture__cancel');
+//const closeModalButton = document.querySelector('.big-picture__cancel');
 
-// eslint-disable-next-line no-shadow
 function addThumbnailClickHandler(thumbnail, photoData) {
   thumbnail.addEventListener('click', () => {
     const commentList = bigPicture.querySelector('.social__comments');
@@ -34,14 +34,4 @@ for (let i = 0; i < thumbnails.length; i++) {
   addThumbnailClickHandler(thumbnails[i], photoMocks[i]);
 }
 
-document.addEventListener('keydown', (evt) => {
-  if (evt.code === 'Escape') {
-    bigPicture.classList.add('hidden');
-    document.querySelector('body').classList.remove('modal-open');
-  }
-});
-
-closeModalButton.addEventListener('click', () => {
-  bigPicture.classList.add('hidden');
-  document.querySelector('body').classList.remove('modal-open');
-});
+export {bigPicture};
