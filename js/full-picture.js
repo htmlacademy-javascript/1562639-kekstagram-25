@@ -26,7 +26,7 @@ function addThumbnailClickHandler(thumbnail, photoData) {
       commentElement.querySelector('.social__picture').alt = name;
       commentElement.querySelector('.social__text').textContent = message;
       commentList.appendChild(commentElement);
-    })
+    });
   });
 }
 
