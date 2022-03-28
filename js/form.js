@@ -5,7 +5,7 @@ const uploadFileInput = form.querySelector('#upload-file');
 const uploadOverlay = form.querySelector('.img-upload__overlay');
 const uploadCancelButton = form.querySelector('#upload-cancel');
 const textHashtags = form.querySelector('.text__hashtags');
-const description = form.querySelector('.text__description');
+//const description = form.querySelector('.text__description');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__text',
