@@ -4,12 +4,20 @@ const form = document.querySelector('.img-upload__form');
 const uploadFileInput = form.querySelector('#upload-file');
 const uploadOverlay = form.querySelector('.img-upload__overlay');
 const uploadCancelButton = form.querySelector('#upload-cancel');
-const textHashtags = form.querySelector('.text__hashtags');
-//const description = form.querySelector('.text__description');
+const hashtagsInput = form.querySelector('.text__hashtags');
+const descriptionInput = form.querySelector('.text__description');
+const errorText = form.querySelector('.text__error');
 
 const pristine = new Pristine(form, {
-  classTo: 'img-upload__text',
-  errorTextParent: 'img-upload__text',
+  classTo: 'text__element--description',
+  errorTextParent: 'text__element--description',
+  errorTextClass: 'text__error',
+});
+
+form.addEventListener('submit', (evt) => {
+  if (!pristine.validate()) {
+    evt.preventDefault();
+  }
 });
 
 const onRedactorEscKeydown = (evt) => {
@@ -35,7 +43,8 @@ function closeRedactorPhoto () {
 
 uploadFileInput.addEventListener('change', () => {
   openRedactorPhoto();
-
+  hashtagsInput.addEventListener('keydown', (evt) => evt.stopPropagation());
+  descriptionInput.addEventListener('keydown', (evt) => evt.stopPropagation());
   document.addEventListener('keydown', onRedactorEscKeydown);
 });
 
@@ -43,40 +52,48 @@ uploadCancelButton.addEventListener('click', () => {
   closeRedactorPhoto();
 });
 
-textHashtags.addEventListener('change', () => {
-  const hashtags = textHashtags.value;
-  const hashtagsArray = hashtags.split(' ', 5);
-  for (let i = 0; i <= hashtagsArray.length - 1; i++) {
-    for (let j = i+1; j <= hashtagsArray.length; j++) {
-      // eslint-disable-next-line eqeqeq
-      if (i != j && hashtagsArray[i] != hashtagsArray[j]) {
-        // eslint-disable-next-line no-console
-        console.log('OK');
-      } else {
-        // eslint-disable-next-line no-console
-        console.log('Error');
-      }
+// Валидаця на повторения и количество хэштегов
+function myValidationFunction() {
+  const hashtags = hashtagsInput.value.toLowerCase().split(' ');
+  const uniqHashtags = new Set(hashtags);
+  if (hashtags.length > 5) {
+    errorText.textContent = 'Хэш-тегов не может быть более 5';
+    return false;
+  }
+  else {
+    errorText.textContent = '';
+    if (uniqHashtags.size < hashtags.length) {
+      errorText.textContent = 'Не должно быть повторяющихся Хэштегов';
+      return false;
+    }
+    else {
+      errorText.textContent = '';
     }
   }
-});
 
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-
-  const isValid = pristine.validate();
-  if (isValid) {
-    // eslint-disable-next-line no-console
-    console.log('Можно отправлять');
-  } else {
-    // eslint-disable-next-line no-console
-    console.log('Форма невалидна');
+  // Валидация хэштега на правильность ввода
+  const re = new RegExp('^#[A-Za-zА-Яа-яЁё0-9]{1,20}$');
+  for (let i = 0; i < hashtags.length; i++) {
+    if (hashtagsInput.value.length > 0) {
+      const curentHashtag = hashtags[i];
+      const hashCheck = re.test(curentHashtag);
+      if (hashCheck === false) {
+        errorText.textContent = 'Хэш-тег имеет ошибку или длину более 20 символов';
+        if (curentHashtag === '' || curentHashtag === '#') {
+          errorText.textContent = 'Введите #ХэшТег';
+        }
+        return false;
+      }
+      else {
+        errorText.textContent = '';
+      }
+    } else {
+      errorText.textContent = '';
+      return true;
+    }
   }
-});
+  return true;
+}
 
-
-// разобраться, куда это вставить
-//if (textHashtags.focus || description.focus) {
-//evt.stopPropagation();
-//}
-
+pristine.addValidator(hashtagsInput, myValidationFunction);

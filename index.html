@@ -115,8 +115,14 @@
 
                 <!-- Добавление хэш-тегов и комментария к изображению -->
                 <fieldset class="img-upload__text text">
-                  <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег" data-pristine-pattern="/^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/" data-pristine-pattern-message="Хэштег начинается с #(решетка), далее буквы и цифры без знаков препинания, пробелов и спецсимволов, не менее 2 символов, включая #">
-                  <textarea class="text__description" name="description" placeholder="Ваш комментарий..." maxlength="140" data-pristine-maxlength-message="Максимальная длина 140 символов"></textarea>
+                  <!--data-pristine-pattern="/^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/" data-pristine-pattern-message="Хэштег начинается с #(решетка), далее буквы и цифры без знаков препинания, пробелов и спецсимволов, не менее 2 символов, включая #"-->
+                  <label class="text__element text__element--hashtags">
+                    <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег">
+                    <div class="text__error"></div>
+                  </label>
+                  <label class="text__element text__element--description">
+                    <textarea class="text__description" name="description" placeholder="Ваш комментарий..." maxlength="140" data-pristine-maxlength-message="Максимальная длина 140 символов"></textarea>
+                  </label>
                 </fieldset>
 
                 <!-- Кнопка для отправки данных на сервер -->
