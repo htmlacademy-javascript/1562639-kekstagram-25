@@ -1,5 +1,10 @@
 import { isEscapeKey } from './util.js';
 
+const HASHTAG_INVALID_FORMAT_ERROR = 'хэш-тег начинается с символа #, быть не длиннее 20 символов, строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д';
+const HASHTAG_UNIQUENESS_ERROR = 'Не должно быть повторяющихся Хэштегов';
+const MAX_HASHTAGS_AMOUNT = 5;
+const HASHTAGS_AMOUNT_ERROR = `Хэш-тегов не может быть более ${MAX_HASHTAGS_AMOUNT}`;
+
 const form = document.querySelector('.img-upload__form');
 const uploadFileInput = form.querySelector('#upload-file');
 const uploadOverlay = form.querySelector('.img-upload__overlay');
@@ -9,8 +14,8 @@ const descriptionInput = form.querySelector('.text__description');
 const errorText = form.querySelector('.text__error');
 
 const pristine = new Pristine(form, {
-  classTo: 'text__element--description',
-  errorTextParent: 'text__element--description',
+  classTo: 'text__element--hashtags',
+  errorTextParent: 'text__element--hashtags',
   errorTextClass: 'text__error',
 });
 
@@ -30,6 +35,10 @@ const onRedactorEscKeydown = (evt) => {
 function openRedactorPhoto () {
   uploadOverlay.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
+
+  hashtagsInput.addEventListener('keydown', (evt) => evt.stopPropagation());
+  descriptionInput.addEventListener('keydown', (evt) => evt.stopPropagation());
+  document.addEventListener('keydown', onRedactorEscKeydown);
 }
 
 function closeRedactorPhoto () {
@@ -38,20 +47,54 @@ function closeRedactorPhoto () {
 
   uploadFileInput.value = '';
 
+  hashtagsInput.removeEventListener('keydown', (evt) => evt.stopPropagation());
+  descriptionInput.removeEventListener('keydown', (evt) => evt.stopPropagation());
   document.removeEventListener('keydown', onRedactorEscKeydown);
 }
 
-uploadFileInput.addEventListener('change', () => {
-  openRedactorPhoto();
-  hashtagsInput.addEventListener('keydown', (evt) => evt.stopPropagation());
-  descriptionInput.addEventListener('keydown', (evt) => evt.stopPropagation());
-  document.addEventListener('keydown', onRedactorEscKeydown);
-});
+uploadFileInput.addEventListener('change', openRedactorPhoto);
 
-uploadCancelButton.addEventListener('click', () => {
-  closeRedactorPhoto();
-});
+uploadCancelButton.addEventListener('click', closeRedactorPhoto);
 
+const validateFormat = (hashtags) => {
+  const re = new RegExp('^#[A-Za-zА-Яа-яЁё0-9]{1,20}$');
+  for (let i = 0; i < hashtags.length; i++) {
+    if (!re.test(hashtags[i])) {
+      errorText.textContent = HASHTAG_INVALID_FORMAT_ERROR;
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const validateUniqueness = (hashtags) => {
+  const uniqHashtags = new Set(hashtags);
+  if (uniqHashtags.size < hashtags.length) {
+    errorText.textContent = HASHTAG_UNIQUENESS_ERROR;
+    return false;
+  }
+
+  return true;
+};
+
+const validateAmount = (hashtags) => {
+  if (hashtags.length > MAX_HASHTAGS_AMOUNT) {
+    errorText.textContent = HASHTAGS_AMOUNT_ERROR;
+    return false;
+  }
+
+  return true;
+};
+
+const validateHashtags = () => {
+  const hashtags = hashtagsInput.value.toLowerCase().split(' ');
+  errorText.textContent = '';
+
+  return validateFormat(hashtags) && validateUniqueness(hashtags) && validateAmount(hashtags);
+};
+
+/*
 // Валидаця на повторения и количество хэштегов
 function myValidationFunction() {
   const hashtags = hashtagsInput.value.toLowerCase().split(' ');
@@ -94,6 +137,6 @@ function myValidationFunction() {
     }
   }
   return true;
-}
+}*/
 
-pristine.addValidator(hashtagsInput, myValidationFunction);
+pristine.addValidator(hashtagsInput, validateHashtags);
