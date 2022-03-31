@@ -18,6 +18,8 @@ const onPopupEscKeydown = (evt) => {
 const openUserModal = () => {
   document.querySelector('body').classList.add('modal-open');
   bigPicture.classList.remove('hidden');
+
+  document.addEventListener('keydown', onPopupEscKeydown);
 };
 
 function closeUserModal () {
@@ -45,8 +47,6 @@ function onThumbnailClick(thumbnail, photoData) {
       commentElement.querySelector('.social__text').textContent = message;
       commentList.appendChild(commentElement);
     });
-
-    document.addEventListener('keydown', onPopupEscKeydown);
   });
 }
 
