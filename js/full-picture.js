@@ -15,10 +15,10 @@ const onPopupEscKeydown = (evt) => {
   }
 };
 
-function openUserModal () {
+const openUserModal = () => {
   document.querySelector('body').classList.add('modal-open');
   bigPicture.classList.remove('hidden');
-}
+};
 
 function closeUserModal () {
   bigPicture.classList.add('hidden');
@@ -54,6 +54,4 @@ for (let i = 0; i < thumbnails.length; i++) {
   onThumbnailClick(thumbnails[i], photoMocks[i]);
 }
 
-closeModalButton.addEventListener('click', () => {
-  closeUserModal();
-});
+closeModalButton.addEventListener('click', closeUserModal);

@@ -14,8 +14,6 @@ const descriptionInput = form.querySelector('.text__description');
 const errorText = form.querySelector('.text__error');
 
 const pristine = new Pristine(form, {
-  classTo: 'text__element--hashtags',
-  errorTextParent: 'text__element--hashtags',
   errorTextClass: 'text__error',
 });
 
@@ -32,14 +30,16 @@ const onRedactorEscKeydown = (evt) => {
   }
 };
 
-function openRedactorPhoto () {
+const onInputKeydown = (evt) => evt.stopPropagation();
+
+const openRedactorPhoto = () => {
   uploadOverlay.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
 
-  hashtagsInput.addEventListener('keydown', (evt) => evt.stopPropagation());
-  descriptionInput.addEventListener('keydown', (evt) => evt.stopPropagation());
+  hashtagsInput.addEventListener('keydown', onInputKeydown);
+  descriptionInput.addEventListener('keydown', onInputKeydown);
   document.addEventListener('keydown', onRedactorEscKeydown);
-}
+};
 
 function closeRedactorPhoto () {
   uploadOverlay.classList.add('hidden');
@@ -47,8 +47,8 @@ function closeRedactorPhoto () {
 
   uploadFileInput.value = '';
 
-  hashtagsInput.removeEventListener('keydown', (evt) => evt.stopPropagation());
-  descriptionInput.removeEventListener('keydown', (evt) => evt.stopPropagation());
+  hashtagsInput.removeEventListener('keydown', onInputKeydown);
+  descriptionInput.removeEventListener('keydown', onInputKeydown);
   document.removeEventListener('keydown', onRedactorEscKeydown);
 }
 
@@ -93,50 +93,5 @@ const validateHashtags = () => {
 
   return validateFormat(hashtags) && validateUniqueness(hashtags) && validateAmount(hashtags);
 };
-
-/*
-// Валидаця на повторения и количество хэштегов
-function myValidationFunction() {
-  const hashtags = hashtagsInput.value.toLowerCase().split(' ');
-  const uniqHashtags = new Set(hashtags);
-  if (hashtags.length > 5) {
-    errorText.textContent = 'Хэш-тегов не может быть более 5';
-    return false;
-  }
-  else {
-    errorText.textContent = '';
-    if (uniqHashtags.size < hashtags.length) {
-      errorText.textContent = 'Не должно быть повторяющихся Хэштегов';
-      return false;
-    }
-    else {
-      errorText.textContent = '';
-    }
-  }
-
-
-  // Валидация хэштега на правильность ввода
-  const re = new RegExp('^#[A-Za-zА-Яа-яЁё0-9]{1,20}$');
-  for (let i = 0; i < hashtags.length; i++) {
-    if (hashtagsInput.value.length > 0) {
-      const curentHashtag = hashtags[i];
-      const hashCheck = re.test(curentHashtag);
-      if (hashCheck === false) {
-        errorText.textContent = 'Хэш-тег имеет ошибку или длину более 20 символов';
-        if (curentHashtag === '' || curentHashtag === '#') {
-          errorText.textContent = 'Введите #ХэшТег';
-        }
-        return false;
-      }
-      else {
-        errorText.textContent = '';
-      }
-    } else {
-      errorText.textContent = '';
-      return true;
-    }
-  }
-  return true;
-}*/
 
 pristine.addValidator(hashtagsInput, validateHashtags);
