@@ -1,19 +1,39 @@
 import { photoMocks } from './data.js';
 import './picture.js';
-import './close-picture.js';
+import { isEscapeKey } from './util.js';
 
 const thumbnails = document.querySelectorAll('.picture');
 const bigPicture = document.querySelector('.big-picture');
 const commentItem = bigPicture.querySelector('.social__comment');
 
-//const closeModalButton = document.querySelector('.big-picture__cancel');
+const closeModalButton = document.querySelector('.big-picture__cancel');
 
-function addThumbnailClickHandler(thumbnail, photoData) {
+const onPopupEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeUserModal();
+  }
+};
+
+const openUserModal = () => {
+  document.querySelector('body').classList.add('modal-open');
+  bigPicture.classList.remove('hidden');
+
+  document.addEventListener('keydown', onPopupEscKeydown);
+};
+
+function closeUserModal () {
+  bigPicture.classList.add('hidden');
+  document.querySelector('body').classList.remove('modal-open');
+
+  document.removeEventListener('keydown', onPopupEscKeydown);
+}
+
+function onThumbnailClick(thumbnail, photoData) {
   thumbnail.addEventListener('click', () => {
+    openUserModal ();
     const commentList = bigPicture.querySelector('.social__comments');
     commentList.textContent = '';
-    document.querySelector('body').classList.add('modal-open');
-    bigPicture.classList.remove('hidden');
     bigPicture.querySelector('.social__comment-count').classList.add('hidden');
     bigPicture.querySelector('.comments-loader').classList.add('hidden');
     bigPicture.querySelector('.big-picture__img').querySelector('img').src = photoData.url;
@@ -31,7 +51,7 @@ function addThumbnailClickHandler(thumbnail, photoData) {
 }
 
 for (let i = 0; i < thumbnails.length; i++) {
-  addThumbnailClickHandler(thumbnails[i], photoMocks[i]);
+  onThumbnailClick(thumbnails[i], photoMocks[i]);
 }
 
-export {bigPicture};
+closeModalButton.addEventListener('click', closeUserModal);

@@ -28,4 +28,6 @@ const checkStringLength = function (string, maxStringLength) {
 
 checkStringLength('какой-то комментарий', 8);
 
-export {getRandomPositiveInteger, getRandomArrayElement, shuffleArray};
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {getRandomPositiveInteger, getRandomArrayElement, shuffleArray, isEscapeKey};
