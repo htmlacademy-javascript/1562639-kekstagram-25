@@ -191,55 +191,6 @@ for (let i = 0; i < effectsItems.length; i++) {
   effectsItems[i].addEventListener('click', handleEffectClick);
 }
 
-/*const NON_EFFECT_FIELD_ID = 'effect-none';
-imgUploadEffectLevel.classList.add('hidden');
-
-  none: 'none',
-  property: '',
-  getTotalString: function (variable){
-    switch(true){
-      case (photoFilters.property === photoFilters.marvin.name):
-        return `${photoFilters.property  }(${  variable  }%)`;
-      case (photoFilters.property === photoFilters.phobos.name):
-        return `${photoFilters.property  }(${  variable  }px)`;
-      default:
-        return `${photoFilters.property  }(${  variable  })`;
-    }
-  }
-};
-
-noUiSlider.create(sliderElement, {
-  range: {
-    min: 0,
-    max: 100,
-  },
-  start: 0,
-  step: 1,
-  connect: 'lower',
-});
-
-sliderElement.noUiSlider.on('update', () => {
-  img.style.filter = photoFilters.getTotalString(sliderElement.noUiSlider.get());
-  effectLevelValue.value = sliderElement.noUiSlider.get();
-});
-
-const updateFilterSetting = (photoFilter) => {
-  img.style.filter = 'none';
-  photoFilters.property = photoFilters[photoFilter].name;
-  sliderElement.noUiSlider.updateOptions(photoFilters[photoFilter]);
-  imgUploadEffectLevel.classList.remove('hidden');
-};
-for (let i = 0; i < effectsList.length; i++) {
-  effectsList[i].addEventListener('click', (evt) => {
-    const photoFilter = evt.target.id.split('-')[1];
-    updateFilterSetting(photoFilter);
-    if (evt.target.id === NON_EFFECT_FIELD_ID) {
-      img.style.filter = 'none';
-      imgUploadEffectLevel.classList.add('hidden');
-    }
-  });
-}*/
-
 //Валидация хэштега
 const validateFormat = (hashtags) => {
   const re = new RegExp('^#[A-Za-zА-Яа-яЁё0-9]{1,20}$');
