@@ -18,9 +18,9 @@ const hashtagsInput = form.querySelector('.text__hashtags');
 const descriptionInput = form.querySelector('.text__description');
 const errorText = form.querySelector('.text__error');
 const sliderElement = document.querySelector('.effect-level__slider');
-const effectsList = document.querySelectorAll('.effects__radio');
-const effectLevelValue = document.querySelector('.effect-level__value');
-const imgUploadEffectLevel = document.querySelector('.img-upload__effect-level');
+const effectsItems = document.querySelectorAll('.effects__radio');
+const sliderEffectValue = document.querySelector('.effect-level__value');
+const imgUploadEffect = document.querySelector('.img-upload__effect-level');
 const MINSIZE = 25;
 const MAXSIZE = 100;
 const STEP = 25;
@@ -90,11 +90,19 @@ controlBigger.addEventListener('click', () => {
 });
 
 //Фильтры
-const NON_EFFECT_FIELD_ID = 'effect-none';
-imgUploadEffectLevel.classList.add('hidden');
-const photoFilters = {
-  chrome : {
-    name: 'grayscale',
+imgUploadEffect.classList.add('hidden');
+
+const Effect = {
+  CHROME: 'chrome',
+  SEPIA: 'sepia',
+  MARVIN: 'marvin',
+  PHOBOS: 'phobos',
+  HEAT: 'heat',
+  NONE: 'none'
+};
+
+const effectsSettings = {
+  [Effect.CHROME]: {
     range: {
       min: 0,
       max: 1,
@@ -103,8 +111,7 @@ const photoFilters = {
     step: 0.1,
     connect: 'lower',
   },
-  sepia : {
-    name: 'sepia',
+  [Effect.SEPIA]: {
     range: {
       min: 0,
       max: 1,
@@ -113,8 +120,7 @@ const photoFilters = {
     step: 0.1,
     connect: 'lower',
   },
-  marvin : {
-    name: 'invert',
+  [Effect.MARVIN]: {
     range: {
       min: 0,
       max: 100,
@@ -123,8 +129,7 @@ const photoFilters = {
     step: 1,
     connect: 'lower',
   },
-  phobos : {
-    name: 'blur',
+  [Effect.PHOBOS]: {
     range: {
       min: 0,
       max: 3,
@@ -133,8 +138,7 @@ const photoFilters = {
     step: 0.1,
     connect: 'lower',
   },
-  heat : {
-    name: 'brightness',
+  [Effect.HEAT]: {
     range: {
       min: 0,
       max: 3,
@@ -143,6 +147,53 @@ const photoFilters = {
     step: 0.1,
     connect: 'lower',
   },
+  [Effect.NONE]: {}
+};
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: 100,
+  },
+  start: 0,
+  step: 1,
+  connect: 'lower',
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  const filterValue = sliderElement.noUiSlider.get();
+  sliderEffectValue.value = filterValue;
+  imgUploadEffect.classList.remove('hidden');
+  const selectedEffect = document.querySelector('input[name="effect"]:checked').value;
+  if (selectedEffect === Effect.CHROME) {
+    img.style.filter = `grayscale(${filterValue})`;
+  } else if (selectedEffect === Effect.SEPIA) {
+    img.style.filter = `sepia(${filterValue})`;
+  } else if (selectedEffect === Effect.MARVIN) {
+    img.style.filter = `invert(${filterValue}%)`;
+  } else if (selectedEffect === Effect.PHOBOS) {
+    img.style.filter = `blur(${filterValue}px)`;
+  } else if (selectedEffect === Effect.HEAT) {
+    img.style.filter =`brightness(${filterValue})`;
+  } else if (selectedEffect === Effect.NONE) {
+    img.style.filter = 'none';
+    imgUploadEffect.classList.add('hidden');
+  }
+});
+
+const handleEffectClick = (evt) => {
+  const effectValue = evt.target.value;
+
+  sliderElement.noUiSlider.updateOptions(effectsSettings[effectValue]);
+};
+
+for (let i = 0; i < effectsItems.length; i++) {
+  effectsItems[i].addEventListener('click', handleEffectClick);
+}
+
+/*const NON_EFFECT_FIELD_ID = 'effect-none';
+imgUploadEffectLevel.classList.add('hidden');
+
   none: 'none',
   property: '',
   getTotalString: function (variable){
@@ -187,7 +238,7 @@ for (let i = 0; i < effectsList.length; i++) {
       imgUploadEffectLevel.classList.add('hidden');
     }
   });
-}
+}*/
 
 //Валидация хэштега
 const validateFormat = (hashtags) => {
