@@ -24,6 +24,14 @@ const imgUploadEffect = document.querySelector('.img-upload__effect-level');
 const MINSIZE = 25;
 const MAXSIZE = 100;
 const STEP = 25;
+const Effect = {
+  CHROME: 'chrome',
+  SEPIA: 'sepia',
+  MARVIN: 'marvin',
+  PHOBOS: 'phobos',
+  HEAT: 'heat',
+  NONE: 'none'
+};
 
 const pristine = new Pristine(form, {
   errorTextClass: 'text__error',
@@ -91,15 +99,6 @@ controlBigger.addEventListener('click', () => {
 
 //Фильтры
 imgUploadEffect.classList.add('hidden');
-
-const Effect = {
-  CHROME: 'chrome',
-  SEPIA: 'sepia',
-  MARVIN: 'marvin',
-  PHOBOS: 'phobos',
-  HEAT: 'heat',
-  NONE: 'none'
-};
 
 const effectsSettings = {
   [Effect.CHROME]: {
