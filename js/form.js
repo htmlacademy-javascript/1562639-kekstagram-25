@@ -9,9 +9,29 @@ const form = document.querySelector('.img-upload__form');
 const uploadFileInput = form.querySelector('#upload-file');
 const uploadOverlay = form.querySelector('.img-upload__overlay');
 const uploadCancelButton = form.querySelector('#upload-cancel');
+const controlSmaller = document.querySelector('.scale__control--smaller');
+const controlBigger = document.querySelector('.scale__control--bigger');
+const scaleControlValue = document.querySelector('.scale__control--value');
+const imgUploadPreview = document.querySelector('.img-upload__preview');
+const img = imgUploadPreview.querySelector('img');
 const hashtagsInput = form.querySelector('.text__hashtags');
 const descriptionInput = form.querySelector('.text__description');
 const errorText = form.querySelector('.text__error');
+const sliderElement = document.querySelector('.effect-level__slider');
+const effectsItems = document.querySelectorAll('.effects__radio');
+const sliderEffectValue = document.querySelector('.effect-level__value');
+const imgUploadEffect = document.querySelector('.img-upload__effect-level');
+const MINSIZE = 25;
+const MAXSIZE = 100;
+const STEP = 25;
+const Effect = {
+  CHROME: 'chrome',
+  SEPIA: 'sepia',
+  MARVIN: 'marvin',
+  PHOBOS: 'phobos',
+  HEAT: 'heat',
+  NONE: 'none'
+};
 
 const pristine = new Pristine(form, {
   errorTextClass: 'text__error',
@@ -33,6 +53,7 @@ const onRedactorEscKeydown = (evt) => {
 const onInputKeydown = (evt) => evt.stopPropagation();
 
 const openRedactorPhoto = () => {
+  scaleControlValue.value = `${MAXSIZE}%`;
   uploadOverlay.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
 
@@ -56,6 +77,120 @@ uploadFileInput.addEventListener('change', openRedactorPhoto);
 
 uploadCancelButton.addEventListener('click', closeRedactorPhoto);
 
+//Изменение масштаба изображения
+controlSmaller.addEventListener('click', () => {
+  let size = parseInt(scaleControlValue.value, 10);
+  if (size <= MINSIZE) {
+    return;
+  }
+  size -= STEP;
+  scaleControlValue.value = `${size}%`;
+  img.style.transform = `scale(${size / 100})`;
+});
+controlBigger.addEventListener('click', () => {
+  let size = parseInt(scaleControlValue.value, 10);
+  if (size >= MAXSIZE) {
+    return;
+  }
+  size += STEP;
+  scaleControlValue.value = `${size}%`;
+  img.style.transform = `scale(${size / 100})`;
+});
+
+//Фильтры
+imgUploadEffect.classList.add('hidden');
+
+const effectsSettings = {
+  [Effect.CHROME]: {
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 0.1,
+    connect: 'lower',
+  },
+  [Effect.SEPIA]: {
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 0.1,
+    connect: 'lower',
+  },
+  [Effect.MARVIN]: {
+    range: {
+      min: 0,
+      max: 100,
+    },
+    start: 100,
+    step: 1,
+    connect: 'lower',
+  },
+  [Effect.PHOBOS]: {
+    range: {
+      min: 0,
+      max: 3,
+    },
+    start: 3,
+    step: 0.1,
+    connect: 'lower',
+  },
+  [Effect.HEAT]: {
+    range: {
+      min: 0,
+      max: 3,
+    },
+    start: 3,
+    step: 0.1,
+    connect: 'lower',
+  },
+  [Effect.NONE]: {}
+};
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: 100,
+  },
+  start: 0,
+  step: 1,
+  connect: 'lower',
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  const filterValue = sliderElement.noUiSlider.get();
+  sliderEffectValue.value = filterValue;
+  imgUploadEffect.classList.remove('hidden');
+  const selectedEffect = document.querySelector('input[name="effect"]:checked').value;
+  if (selectedEffect === Effect.CHROME) {
+    img.style.filter = `grayscale(${filterValue})`;
+  } else if (selectedEffect === Effect.SEPIA) {
+    img.style.filter = `sepia(${filterValue})`;
+  } else if (selectedEffect === Effect.MARVIN) {
+    img.style.filter = `invert(${filterValue}%)`;
+  } else if (selectedEffect === Effect.PHOBOS) {
+    img.style.filter = `blur(${filterValue}px)`;
+  } else if (selectedEffect === Effect.HEAT) {
+    img.style.filter =`brightness(${filterValue})`;
+  } else if (selectedEffect === Effect.NONE) {
+    img.style.filter = 'none';
+    imgUploadEffect.classList.add('hidden');
+  }
+});
+
+const handleEffectClick = (evt) => {
+  const effectValue = evt.target.value;
+
+  sliderElement.noUiSlider.updateOptions(effectsSettings[effectValue]);
+};
+
+for (let i = 0; i < effectsItems.length; i++) {
+  effectsItems[i].addEventListener('click', handleEffectClick);
+}
+
+//Валидация хэштега
 const validateFormat = (hashtags) => {
   const re = new RegExp('^#[A-Za-zА-Яа-яЁё0-9]{1,20}$');
   for (let i = 0; i < hashtags.length; i++) {
