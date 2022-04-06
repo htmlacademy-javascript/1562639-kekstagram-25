@@ -43,7 +43,7 @@ const createComment = (photoId, commentNumber) => ({
 });
 
 function createPhoto(id) {
-  const commentsAmount = getRandomPositiveInteger(0, 5);
+  const commentsAmount = getRandomPositiveInteger(0, 55);
   return {
     id: id,
     url: `photos/${id}.jpg`,
