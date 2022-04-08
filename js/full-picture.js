@@ -21,11 +21,12 @@ function onPopupEscKeydown(evt) {
   }
 }
 
+
 const openUserModal = () => {
   document.querySelector('body').classList.add('modal-open');
   bigPicture.classList.remove('hidden');
 
-  //commentLoader.addEventListener('click', onShowMoreComments);
+  commentLoader.addEventListener('click', onShowMoreComments);
   document.addEventListener('keydown', onPopupEscKeydown);
 };
 
@@ -33,6 +34,7 @@ function closeUserModal () {
   bigPicture.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
 
+  commentLoader.removeEventListener('click', onShowMoreComments);
   document.removeEventListener('keydown', onPopupEscKeydown);
 }
 
@@ -55,7 +57,7 @@ const drawComments = (comments) => {
   });
 };
 
-/*function onShowMoreComments (commentsCounter, totalCommentsAmount, visibleComments, photoData) {
+function onShowMoreComments (commentsCounter, totalCommentsAmount, visibleComments, photoData) {
   if (commentsCounter + COMMENTS_STEP >= totalCommentsAmount ) {
     commentsCounter = totalCommentsAmount;
   } else {
@@ -67,7 +69,7 @@ const drawComments = (comments) => {
   drawComments(visibleComments);
 
   drawShowMoreButton(totalCommentsAmount, commentsCounter);
-}*/
+}
 
 function onThumbnailClick(thumbnail, photoData) {
   thumbnail.addEventListener('click', () => {
@@ -80,29 +82,14 @@ function onThumbnailClick(thumbnail, photoData) {
     commentCountFull.textContent = totalCommentsAmount;
     bigPicture.querySelector('.social__caption').textContent = photoData.description;
 
-    let commentsCounter = totalCommentsAmount >= COMMENTS_STEP ? COMMENTS_STEP : totalCommentsAmount;
+    const commentsCounter = totalCommentsAmount >= COMMENTS_STEP ? COMMENTS_STEP : totalCommentsAmount;
 
     commentsCountStart.textContent = commentsCounter;
 
-    let visibleComments = photoData.comments.slice(0, commentsCounter);
+    const visibleComments = photoData.comments.slice(0, commentsCounter);
     drawComments(visibleComments);
 
     drawShowMoreButton(totalCommentsAmount, commentsCounter);
-
-    commentLoader.addEventListener('click', () => {
-      if (commentsCounter + COMMENTS_STEP >= totalCommentsAmount ) {
-        commentsCounter = totalCommentsAmount;
-      } else {
-        commentsCounter += COMMENTS_STEP;
-      }
-
-      commentsCountStart.textContent = commentsCounter;
-      visibleComments = photoData.comments.slice(0, commentsCounter);
-      drawComments(visibleComments);
-
-      drawShowMoreButton(totalCommentsAmount, commentsCounter);
-    });
-    commentLoader.addEventListener('click', onShowMoreComments);
   });
 }
 
