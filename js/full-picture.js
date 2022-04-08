@@ -13,6 +13,7 @@ const commentsCountStart = bigPicture.querySelector('#comments__counter');
 const closeModalButton = document.querySelector('.big-picture__cancel');
 
 const COMMENTS_STEP = 5;
+let onShowMoreComments;
 
 function onPopupEscKeydown(evt) {
   if (isEscapeKey(evt)) {
@@ -20,7 +21,6 @@ function onPopupEscKeydown(evt) {
     closeUserModal();
   }
 }
-
 
 const openUserModal = () => {
   document.querySelector('body').classList.add('modal-open');
@@ -57,23 +57,8 @@ const drawComments = (comments) => {
   });
 };
 
-function onShowMoreComments (commentsCounter, totalCommentsAmount, visibleComments, photoData) {
-  if (commentsCounter + COMMENTS_STEP >= totalCommentsAmount ) {
-    commentsCounter = totalCommentsAmount;
-  } else {
-    commentsCounter += COMMENTS_STEP;
-  }
-
-  commentsCountStart.textContent = commentsCounter;
-  visibleComments = photoData.comments.slice(0, commentsCounter);
-  drawComments(visibleComments);
-
-  drawShowMoreButton(totalCommentsAmount, commentsCounter);
-}
-
 function onThumbnailClick(thumbnail, photoData) {
   thumbnail.addEventListener('click', () => {
-    openUserModal ();
     commentList.textContent = '';
     bigPicture.querySelector('.big-picture__img').querySelector('img').src = photoData.url;
     bigPicture.querySelector('.likes-count').textContent = photoData.likes;
@@ -82,7 +67,7 @@ function onThumbnailClick(thumbnail, photoData) {
     commentCountFull.textContent = totalCommentsAmount;
     bigPicture.querySelector('.social__caption').textContent = photoData.description;
 
-    const commentsCounter = totalCommentsAmount >= COMMENTS_STEP ? COMMENTS_STEP : totalCommentsAmount;
+    let commentsCounter = totalCommentsAmount >= COMMENTS_STEP ? COMMENTS_STEP : totalCommentsAmount;
 
     commentsCountStart.textContent = commentsCounter;
 
@@ -90,6 +75,22 @@ function onThumbnailClick(thumbnail, photoData) {
     drawComments(visibleComments);
 
     drawShowMoreButton(totalCommentsAmount, commentsCounter);
+
+    onShowMoreComments = () => {
+      if (commentsCounter + COMMENTS_STEP >= totalCommentsAmount ) {
+        commentsCounter = totalCommentsAmount;
+      } else {
+        commentsCounter += COMMENTS_STEP;
+      }
+
+      commentsCountStart.textContent = commentsCounter;
+      const newVisibleComments = photoData.comments.slice(0, commentsCounter);
+      drawComments(newVisibleComments);
+
+      drawShowMoreButton(totalCommentsAmount, commentsCounter);
+    };
+
+    openUserModal();
   });
 }
 
