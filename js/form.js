@@ -182,6 +182,19 @@ sliderElement.noUiSlider.on('update', () => {
 
 const handleEffectClick = (evt) => {
   const effectValue = evt.target.value;
+  if (effectValue === Effect.CHROME) {
+    img.className = 'effects__preview--chrome';
+  } else if (effectValue === Effect.SEPIA) {
+    img.className = 'effects__preview--sepia';
+  } else if (effectValue === Effect.MARVIN) {
+    img.className = 'effects__preview--marvin';
+  } else if (effectValue === Effect.PHOBOS) {
+    img.className = 'effects__preview--phobos';
+  } else if (effectValue === Effect.HEAT) {
+    img.className = 'effects__preview--heat';
+  } else if (effectValue === Effect.NONE) {
+    img.className = '';
+  }
 
   sliderElement.noUiSlider.updateOptions(effectsSettings[effectValue]);
 };
