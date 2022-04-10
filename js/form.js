@@ -1,4 +1,4 @@
-import { isEscapeKey, showAlert } from './util.js';
+import { isEscapeKey } from './util.js';
 import {sendData} from './api.js';
 
 const HASHTAG_INVALID_FORMAT_ERROR = 'хэш-тег начинается с символа #, быть не длиннее 20 символов, строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д';
@@ -22,9 +22,13 @@ const sliderElement = document.querySelector('.effect-level__slider');
 const effectsItems = document.querySelectorAll('.effects__radio');
 const sliderEffectValue = document.querySelector('.effect-level__value');
 const imgUploadEffect = document.querySelector('.img-upload__effect-level');
-/*const successMessage = document.querySelector('#success')
+const successMessageTemplate = document.querySelector('#success')
   .content
-  .querySelector('.success');*/
+  .querySelector('.success');
+const errorMessageTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+
 const MINSIZE = 25;
 const MAXSIZE = 100;
 const STEP = 25;
@@ -60,7 +64,7 @@ const onRedactorEscKeydown = (evt) => {
 const onInputKeydown = (evt) => evt.stopPropagation();
 
 const openRedactorPhoto = () => {
-  scaleControlValue.value = `${MAXSIZE}%`;
+  resetEnteredData();
   uploadOverlay.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
 
@@ -253,19 +257,82 @@ const validateHashtags = () => {
 
 pristine.addValidator(hashtagsInput, validateHashtags);
 
-const setUserFormSubmit = (onSuccess) => {
+
+//Сообщение об успешной загрузке фотографии
+const successMessage = successMessageTemplate.cloneNode(true);
+const successButton = successMessage.querySelector('.success__button');
+
+const onSuccessMessageEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeSuccessMessage();
+  }
+};
+
+function openSuccessMessage () {
+  document.body.appendChild(successMessage);
+
+  document.addEventListener('keydown', onSuccessMessageEscKeydown);
+}
+
+function closeSuccessMessage () {
+  document.body.removeChild(successMessage);
+  document.removeEventListener('keydown', onSuccessMessageEscKeydown);
+}
+
+document.addEventListener('click', (evt) => {
+  if ( evt.target.className !== 'success__inner' ) {
+    closeSuccessMessage();
+  }
+});
+
+successButton.addEventListener('click', closeSuccessMessage);
+
+//Сообщение о неудачной загрузке фотографиии
+const errorMessage = errorMessageTemplate.cloneNode(true);
+const errorButton = errorMessage.querySelector('.error__button');
+
+const onErrorMessageEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeErrorMessage();
+  }
+};
+
+function openErrorMessage () {
+  document.body.appendChild(errorMessage);
+  closeRedactorPhoto();
+
+  document.addEventListener('keydown', onErrorMessageEscKeydown);
+}
+
+function closeErrorMessage () {
+  document.body.removeChild(errorMessage);
+  document.removeEventListener('keydown', onErrorMessageEscKeydown);
+}
+
+document.addEventListener('click', (evt) => {
+  if ( evt.target.className !== 'error__inner' ) {
+    closeErrorMessage();
+  }
+});
+
+errorButton.addEventListener('click', closeErrorMessage);
+
+
+function setUserFormSubmit(onSuccess, onFail) {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
     const isValid = pristine.validate();
     if (isValid) {
       sendData(
-        () => onSuccess(/*document.body.innerHTML = successMessage*/),
-        () => showAlert('Не удалось отправить форму. Попробуйте ещё раз'),
-        new FormData(evt.target),
+        () => onSuccess(openSuccessMessage()),
+        () => onFail(openErrorMessage()),
+        new FormData(evt.target)
       );
     }
   });
-};
+}
 
 export {setUserFormSubmit, closeRedactorPhoto};
