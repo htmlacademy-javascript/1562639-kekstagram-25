@@ -56,4 +56,3 @@ function createPhoto(id) {
 const photoMocks = shuffledNumbers.map((number) => createPhoto(number));
 
 export {photoMocks};
-export {createPhoto};

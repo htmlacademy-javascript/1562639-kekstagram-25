@@ -1,4 +1,5 @@
-import { isEscapeKey } from './util.js';
+import { isEscapeKey, showAlert } from './util.js';
+import {sendData} from './api.js';
 
 const HASHTAG_INVALID_FORMAT_ERROR = 'хэш-тег начинается с символа #, быть не длиннее 20 символов, строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д';
 const HASHTAG_UNIQUENESS_ERROR = 'Не должно быть повторяющихся Хэштегов';
@@ -21,6 +22,9 @@ const sliderElement = document.querySelector('.effect-level__slider');
 const effectsItems = document.querySelectorAll('.effects__radio');
 const sliderEffectValue = document.querySelector('.effect-level__value');
 const imgUploadEffect = document.querySelector('.img-upload__effect-level');
+/*const successMessage = document.querySelector('#success')
+  .content
+  .querySelector('.success');*/
 const MINSIZE = 25;
 const MAXSIZE = 100;
 const STEP = 25;
@@ -33,14 +37,17 @@ const Effect = {
   NONE: 'none'
 };
 
+const resetEnteredData = () => {
+  hashtagsInput.value = '';
+  descriptionInput.value = '';
+  scaleControlValue.value = `${MAXSIZE}%`;
+  img.style.transform = `scale(${MAXSIZE / 100})`;
+  img.style.filter = 'none';
+  imgUploadEffect.classList.add('hidden');
+};
+
 const pristine = new Pristine(form, {
   errorTextClass: 'text__error',
-});
-
-form.addEventListener('submit', (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
-  }
 });
 
 const onRedactorEscKeydown = (evt) => {
@@ -67,6 +74,8 @@ function closeRedactorPhoto () {
   document.querySelector('body').classList.remove('modal-open');
 
   uploadFileInput.value = '';
+
+  resetEnteredData();
 
   hashtagsInput.removeEventListener('keydown', onInputKeydown);
   descriptionInput.removeEventListener('keydown', onInputKeydown);
@@ -243,3 +252,20 @@ const validateHashtags = () => {
 };
 
 pristine.addValidator(hashtagsInput, validateHashtags);
+
+const setUserFormSubmit = (onSuccess) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      sendData(
+        () => onSuccess(/*document.body.innerHTML = successMessage*/),
+        () => showAlert('Не удалось отправить форму. Попробуйте ещё раз'),
+        new FormData(evt.target),
+      );
+    }
+  });
+};
+
+export {setUserFormSubmit, closeRedactorPhoto};
