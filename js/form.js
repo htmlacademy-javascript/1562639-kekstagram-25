@@ -22,13 +22,13 @@ const sliderElement = document.querySelector('.effect-level__slider');
 const effectsItems = document.querySelectorAll('.effects__radio');
 const sliderEffectValue = document.querySelector('.effect-level__value');
 const imgUploadEffect = document.querySelector('.img-upload__effect-level');
-const successMessageTemplate = document.querySelector('#success')
+/*const successMessageTemplate = document.querySelector('#success')
   .content
   .querySelector('.success');
 const errorMessageTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
-
+*/
 const MINSIZE = 25;
 const MAXSIZE = 100;
 const STEP = 25;
@@ -42,6 +42,7 @@ const Effect = {
 };
 
 const resetEnteredData = () => {
+  document.querySelector('#effect-none').check = true;
   hashtagsInput.value = '';
   descriptionInput.value = '';
   scaleControlValue.value = `${MAXSIZE}%`;
@@ -218,14 +219,15 @@ for (let i = 0; i < effectsItems.length; i++) {
 
 //Валидация хэштега
 const validateFormat = (hashtags) => {
-  const re = new RegExp('^#[A-Za-zА-Яа-яЁё0-9]{1,20}$');
-  for (let i = 0; i < hashtags.length; i++) {
-    if (!re.test(hashtags[i])) {
-      errorText.textContent = HASHTAG_INVALID_FORMAT_ERROR;
-      return false;
+  const re = new RegExp('^#[A-Za-zА-Яа-яЁё0-9]{1,19}$');
+  if (hashtagsInput.value !== '') {
+    for (let i = 0; i < hashtags.length; i++) {
+      if (!re.test(hashtags[i])) {
+        errorText.textContent = HASHTAG_INVALID_FORMAT_ERROR;
+        return false;
+      }
     }
   }
-
   return true;
 };
 
@@ -255,11 +257,12 @@ const validateHashtags = () => {
   return validateFormat(hashtags) && validateUniqueness(hashtags) && validateAmount(hashtags);
 };
 
+
 pristine.addValidator(hashtagsInput, validateHashtags);
 
 
 //Сообщение об успешной загрузке фотографии
-const successMessage = successMessageTemplate.cloneNode(true);
+/*const successMessage = successMessageTemplate.cloneNode(true);
 const successButton = successMessage.querySelector('.success__button');
 
 const onSuccessMessageEscKeydown = (evt) => {
@@ -269,11 +272,11 @@ const onSuccessMessageEscKeydown = (evt) => {
   }
 };
 
-function openSuccessMessage () {
+const openSuccessMessage = () => {
   document.body.appendChild(successMessage);
 
   document.addEventListener('keydown', onSuccessMessageEscKeydown);
-}
+};
 
 function closeSuccessMessage () {
   document.body.removeChild(successMessage);
@@ -299,12 +302,12 @@ const onErrorMessageEscKeydown = (evt) => {
   }
 };
 
-function openErrorMessage () {
+const openErrorMessage = () => {
   document.body.appendChild(errorMessage);
   closeRedactorPhoto();
 
   document.addEventListener('keydown', onErrorMessageEscKeydown);
-}
+};
 
 function closeErrorMessage () {
   document.body.removeChild(errorMessage);
@@ -318,21 +321,21 @@ document.addEventListener('click', (evt) => {
 });
 
 errorButton.addEventListener('click', closeErrorMessage);
+*/
 
-
-function setUserFormSubmit(onSuccess, onFail) {
+const setUserFormSubmit = (onSuccess, onFail) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
     const isValid = pristine.validate();
     if (isValid) {
       sendData(
-        () => onSuccess(openSuccessMessage()),
-        () => onFail(openErrorMessage()),
+        () => onSuccess(/*openSuccessMessage()*/),
+        () => onFail(/*openErrorMessage()*/),
         new FormData(evt.target)
       );
     }
   });
-}
+};
 
 export {setUserFormSubmit, closeRedactorPhoto};
