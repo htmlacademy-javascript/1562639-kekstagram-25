@@ -22,13 +22,13 @@ const sliderElement = document.querySelector('.effect-level__slider');
 const effectsItems = document.querySelectorAll('.effects__radio');
 const sliderEffectValue = document.querySelector('.effect-level__value');
 const imgUploadEffect = document.querySelector('.img-upload__effect-level');
-/*const successMessageTemplate = document.querySelector('#success')
+const successMessageTemplate = document.querySelector('#success')
   .content
   .querySelector('.success');
 const errorMessageTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
-*/
+
 const MINSIZE = 25;
 const MAXSIZE = 100;
 const STEP = 25;
@@ -262,7 +262,7 @@ pristine.addValidator(hashtagsInput, validateHashtags);
 
 
 //Сообщение об успешной загрузке фотографии
-/*const successMessage = successMessageTemplate.cloneNode(true);
+const successMessage = successMessageTemplate.cloneNode(true);
 const successButton = successMessage.querySelector('.success__button');
 
 const onSuccessMessageEscKeydown = (evt) => {
@@ -283,7 +283,7 @@ function closeSuccessMessage () {
   document.removeEventListener('keydown', onSuccessMessageEscKeydown);
 }
 
-document.addEventListener('click', (evt) => {
+successMessage.addEventListener('click', (evt) => {
   if ( evt.target.className !== 'success__inner' ) {
     closeSuccessMessage();
   }
@@ -314,14 +314,14 @@ function closeErrorMessage () {
   document.removeEventListener('keydown', onErrorMessageEscKeydown);
 }
 
-document.addEventListener('click', (evt) => {
+errorMessage.addEventListener('click', (evt) => {
   if ( evt.target.className !== 'error__inner' ) {
     closeErrorMessage();
   }
 });
 
 errorButton.addEventListener('click', closeErrorMessage);
-*/
+
 
 const setUserFormSubmit = (onSuccess, onFail) => {
   form.addEventListener('submit', (evt) => {
@@ -330,8 +330,8 @@ const setUserFormSubmit = (onSuccess, onFail) => {
     const isValid = pristine.validate();
     if (isValid) {
       sendData(
-        () => onSuccess(/*openSuccessMessage()*/),
-        () => onFail(/*openErrorMessage()*/),
+        () => onSuccess(openSuccessMessage()),
+        () => onFail(openErrorMessage()),
         new FormData(evt.target)
       );
     }

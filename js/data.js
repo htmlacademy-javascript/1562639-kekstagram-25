@@ -1,6 +1,6 @@
-import {getRandomPositiveInteger, getRandomArrayElement, shuffleArray} from './util.js';
+//import {getRandomPositiveInteger, getRandomArrayElement, shuffleArray} from './util.js';
 
-const numbers = [ ...Array(25).keys() ].map( (i) => i+1);
+/*const numbers = [ ...Array(25).keys() ].map( (i) => i+1);
 
 const shuffledNumbers = shuffleArray(numbers);
 
@@ -56,3 +56,4 @@ function createPhoto(id) {
 const photoMocks = shuffledNumbers.map((number) => createPhoto(number));
 
 export {photoMocks};
+*/

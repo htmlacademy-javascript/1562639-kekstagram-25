@@ -1,4 +1,4 @@
-import { onThumbnailClick } from './full-picture';
+import { onThumbnailClick } from './full-picture.js';
 
 const userPictures = document.querySelector('.pictures');
 const userPictureTemplate = document.querySelector('#picture')
@@ -24,5 +24,6 @@ const renderSimilarPhoto = (photos) => {
     onThumbnailClick(thumbnails[i], photos[i]);
   }
 };
+
 
 export {renderSimilarPhoto};
