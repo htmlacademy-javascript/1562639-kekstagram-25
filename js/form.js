@@ -28,6 +28,7 @@ const successMessageTemplate = document.querySelector('#success')
 const errorMessageTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
+const submitButton = form.querySelector('.img-upload__submit');
 
 const MINSIZE = 25;
 const MAXSIZE = 100;
@@ -322,6 +323,15 @@ errorMessage.addEventListener('click', (evt) => {
 
 errorButton.addEventListener('click', closeErrorMessage);
 
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
 
 const setUserFormSubmit = (onSuccess, onFail) => {
   form.addEventListener('submit', (evt) => {
@@ -329,9 +339,16 @@ const setUserFormSubmit = (onSuccess, onFail) => {
 
     const isValid = pristine.validate();
     if (isValid) {
+      blockSubmitButton();
       sendData(
-        () => onSuccess(openSuccessMessage()),
-        () => onFail(openErrorMessage()),
+        () => {
+          onSuccess(openSuccessMessage());
+          unblockSubmitButton();
+        },
+        () => {
+          onFail(openErrorMessage());
+          unblockSubmitButton();
+        },
         new FormData(evt.target)
       );
     }
