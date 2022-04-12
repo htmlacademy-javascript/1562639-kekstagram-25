@@ -1,8 +1,6 @@
-import { photoMocks } from './data.js';
-import './picture.js';
 import { isEscapeKey } from './util.js';
 
-const thumbnails = document.querySelectorAll('.picture');
+
 const bigPicture = document.querySelector('.big-picture');
 const commentItem = bigPicture.querySelector('.social__comment');
 const commentList = bigPicture.querySelector('.social__comments');
@@ -57,7 +55,7 @@ const drawComments = (comments) => {
   });
 };
 
-function onThumbnailClick(thumbnail, photoData) {
+const onThumbnailClick = (thumbnail, photoData) => {
   thumbnail.addEventListener('click', () => {
     commentList.textContent = '';
     bigPicture.querySelector('.big-picture__img').querySelector('img').src = photoData.url;
@@ -92,10 +90,8 @@ function onThumbnailClick(thumbnail, photoData) {
 
     openUserModal();
   });
-}
-
-for (let i = 0; i < thumbnails.length; i++) {
-  onThumbnailClick(thumbnails[i], photoMocks[i]);
-}
+};
 
 closeModalButton.addEventListener('click', closeUserModal);
+
+export {onThumbnailClick};
