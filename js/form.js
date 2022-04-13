@@ -323,14 +323,17 @@ errorMessage.addEventListener('click', (evt) => {
 
 errorButton.addEventListener('click', closeErrorMessage);
 
+const submitMessageTemplate = document.querySelector('#messages').content.querySelector('.img-upload__message--loading');
+const submitMessage = submitMessageTemplate.cloneNode(true);
+
 const blockSubmitButton = () => {
   submitButton.disabled = true;
-  submitButton.textContent = 'Публикую...';
+  document.body.appendChild(submitMessage);
 };
 
 const unblockSubmitButton = () => {
   submitButton.disabled = false;
-  submitButton.textContent = 'Опубликовать';
+  document.body.removeChild(submitMessage);
 };
 
 const setUserFormSubmit = (onSuccess, onFail) => {

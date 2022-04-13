@@ -1,7 +1,7 @@
 import {showErrorMessage} from './util.js';
 
 const getData = (onSuccess) => {
-  fetch ('https://25.javascript.pages.academ/kekstagram/data')
+  fetch ('https://25.javascript.pages.academy/kekstagram/data')
     .then((response) => response.json())
     .then((photos) => {
       onSuccess(photos);

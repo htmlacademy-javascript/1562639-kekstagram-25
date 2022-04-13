@@ -1,3 +1,25 @@
+//Функция, возвращающая случайное целое число из переданного диапазона включительно
+
+const getRandomPositiveInteger = (a, b) => {
+  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
+  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
+};
+
+const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
+
+//Функция для перемешивания элементов массива
+
+function shuffleArray(array) {
+  const tempArray = [...array]; //клонируем наш массив
+  for (let i = tempArray.length - 1; i > 0; i--) {  //перемешиваем
+    const j = Math.floor(Math.random() * (i + 1));
+    [tempArray[i], tempArray[j]] = [tempArray[j], tempArray[i]];
+  }
+  return tempArray;
+}
+
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const showErrorMessage = (message) => {
@@ -19,4 +41,12 @@ const showErrorMessage = (message) => {
   document.body.append(errorContainer);
 };
 
-export {isEscapeKey, showErrorMessage};
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export {isEscapeKey, showErrorMessage, getRandomArrayElement, shuffleArray, debounce};
