@@ -7,18 +7,17 @@ const commentList = bigPicture.querySelector('.social__comments');
 const commentCountFull = bigPicture.querySelector('.comments-count');
 const commentLoader = bigPicture.querySelector('.social__comments-loader');
 const commentsCountStart = bigPicture.querySelector('#comments__counter');
-
 const closeModalButton = document.querySelector('.big-picture__cancel');
 
 const COMMENTS_STEP = 5;
 let onShowMoreComments;
 
-function onPopupEscKeydown(evt) {
+const onPopupEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeUserModal();
   }
-}
+};
 
 const openUserModal = () => {
   document.querySelector('body').classList.add('modal-open');

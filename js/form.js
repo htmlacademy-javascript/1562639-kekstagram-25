@@ -5,6 +5,17 @@ const HASHTAG_INVALID_FORMAT_ERROR = 'хэш-тег начинается с си
 const HASHTAG_UNIQUENESS_ERROR = 'Не должно быть повторяющихся Хэштегов';
 const MAX_HASHTAGS_AMOUNT = 5;
 const HASHTAGS_AMOUNT_ERROR = `Хэш-тегов не может быть более ${MAX_HASHTAGS_AMOUNT}`;
+const MINSIZE = 25;
+const MAXSIZE = 100;
+const STEP = 25;
+const Effect = {
+  CHROME: 'chrome',
+  SEPIA: 'sepia',
+  MARVIN: 'marvin',
+  PHOBOS: 'phobos',
+  HEAT: 'heat',
+  NONE: 'none'
+};
 
 const form = document.querySelector('.img-upload__form');
 const uploadFileInput = form.querySelector('#upload-file');
@@ -29,18 +40,22 @@ const errorMessageTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
 const submitButton = form.querySelector('.img-upload__submit');
+const fileChooser = document.querySelector('.img-upload__input');
 
-const MINSIZE = 25;
-const MAXSIZE = 100;
-const STEP = 25;
-const Effect = {
-  CHROME: 'chrome',
-  SEPIA: 'sepia',
-  MARVIN: 'marvin',
-  PHOBOS: 'phobos',
-  HEAT: 'heat',
-  NONE: 'none'
-};
+
+const preview = document.querySelector('.img-upload__preview img');
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
+fileChooser.addEventListener('change', () => {
+  const file = fileChooser.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    preview.src = URL.createObjectURL(file);
+  }
+});
 
 const resetEnteredData = () => {
   document.querySelector('#effect-none').check = true;
@@ -195,7 +210,7 @@ sliderElement.noUiSlider.on('update', () => {
   }
 });
 
-const handleEffectClick = (evt) => {
+const onEffectClick = (evt) => {
   const effectValue = evt.target.value;
   if (effectValue === Effect.CHROME) {
     img.className = 'effects__preview--chrome';
@@ -215,7 +230,7 @@ const handleEffectClick = (evt) => {
 };
 
 for (let i = 0; i < effectsItems.length; i++) {
-  effectsItems[i].addEventListener('click', handleEffectClick);
+  effectsItems[i].addEventListener('click', onEffectClick);
 }
 
 //Валидация хэштега
@@ -258,9 +273,7 @@ const validateHashtags = () => {
   return validateFormat(hashtags) && validateUniqueness(hashtags) && validateAmount(hashtags);
 };
 
-
 pristine.addValidator(hashtagsInput, validateHashtags);
-
 
 //Сообщение об успешной загрузке фотографии
 const successMessage = successMessageTemplate.cloneNode(true);
