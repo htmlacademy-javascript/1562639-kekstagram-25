@@ -45,11 +45,7 @@ const renderSimilarPhoto = (photos) => {
   filters.classList.remove('img-filters--inactive');
 };
 
-const comparePhoto = (photoA, photoB) => {
-  const commentsA = photoA.comments.length;
-  const commentsB = photoB.comments.length;
-  return commentsB - commentsA;
-};
+const comparePhoto = (photoA, photoB) => photoB.comments.length - photoA.comments.length;
 
 const clearPhotoList = () => {
   document.querySelectorAll('.picture').forEach((picture) => {
@@ -57,20 +53,18 @@ const clearPhotoList = () => {
   });
 };
 
-const visiblePhoto = (evt, photos) => {
+const showPhoto = (evt, photos) => {
   const targetButton = evt.target;
   clearPhotoList();
   let photoToShow = photos;
 
   if (targetButton === filterRandom) {
-    clearPhotoList();
     photoToShow = shuffleArray(photos).slice(0, NUMBER_RANDOM_PHOTOS);
   }
   if (targetButton === filterDiscussed) {
-    clearPhotoList();
     photoToShow = photos.slice().sort(comparePhoto);
   }
   renderSimilarPhoto(photoToShow);
 };
 
-export {renderSimilarPhoto, setFiltersClick, visiblePhoto};
+export {renderSimilarPhoto, setFiltersClick, showPhoto};
