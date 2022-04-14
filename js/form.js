@@ -42,7 +42,6 @@ const errorMessageTemplate = document.querySelector('#error')
 const submitButton = form.querySelector('.img-upload__submit');
 const fileChooser = document.querySelector('.img-upload__input');
 
-
 const preview = document.querySelector('.img-upload__preview img');
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
@@ -277,7 +276,6 @@ pristine.addValidator(hashtagsInput, validateHashtags);
 
 //Сообщение об успешной загрузке фотографии
 const successMessage = successMessageTemplate.cloneNode(true);
-const successButton = successMessage.querySelector('.success__button');
 
 const onSuccessMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -294,20 +292,25 @@ const openSuccessMessage = () => {
 
 function closeSuccessMessage () {
   document.body.removeChild(successMessage);
+
   document.removeEventListener('keydown', onSuccessMessageEscKeydown);
 }
 
 successMessage.addEventListener('click', (evt) => {
-  if ( evt.target.className !== 'success__inner' ) {
+  if ( !evt.target.closest('success__inner') ) {
     closeSuccessMessage();
   }
 });
 
-successButton.addEventListener('click', closeSuccessMessage);
+//successButton.addEventListener('click', closeSuccessMessage);
+
+const onSuccessFormSend = () => {
+  closeRedactorPhoto();
+  openSuccessMessage();
+};
 
 //Сообщение о неудачной загрузке фотографиии
 const errorMessage = errorMessageTemplate.cloneNode(true);
-const errorButton = errorMessage.querySelector('.error__button');
 
 const onErrorMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -318,23 +321,26 @@ const onErrorMessageEscKeydown = (evt) => {
 
 const openErrorMessage = () => {
   document.body.appendChild(errorMessage);
-  closeRedactorPhoto();
 
   document.addEventListener('keydown', onErrorMessageEscKeydown);
 };
 
 function closeErrorMessage () {
   document.body.removeChild(errorMessage);
+
   document.removeEventListener('keydown', onErrorMessageEscKeydown);
 }
 
 errorMessage.addEventListener('click', (evt) => {
-  if ( evt.target.className !== 'error__inner' ) {
+  if ( !evt.target.closest('error__inner') ) {
     closeErrorMessage();
   }
 });
 
-errorButton.addEventListener('click', closeErrorMessage);
+const onErrorFormSend = () => {
+  closeRedactorPhoto();
+  openErrorMessage();
+};
 
 const submitMessageTemplate = document.querySelector('#messages').content.querySelector('.img-upload__message--loading');
 const submitMessage = submitMessageTemplate.cloneNode(true);
@@ -358,11 +364,11 @@ const setUserFormSubmit = (onSuccess, onFail) => {
       blockSubmitButton();
       sendData(
         () => {
-          onSuccess(openSuccessMessage());
+          onSuccess();
           unblockSubmitButton();
         },
         () => {
-          onFail(openErrorMessage());
+          onFail();
           unblockSubmitButton();
         },
         new FormData(evt.target)
@@ -371,4 +377,4 @@ const setUserFormSubmit = (onSuccess, onFail) => {
   });
 };
 
-export {setUserFormSubmit, closeRedactorPhoto};
+export {setUserFormSubmit, onSuccessFormSend,  onErrorFormSend};
