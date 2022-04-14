@@ -1,5 +1,5 @@
 import { renderSimilarPhoto, setFiltersClick, showPhoto } from './picture.js';
-import { setUserFormSubmit, closeRedactorPhoto } from './form.js';
+import { setUserFormSubmit, onSuccessFormSend,  onErrorFormSend } from './form.js';
 import {getData} from './api.js';
 import { debounce } from './util.js';
 
@@ -13,4 +13,4 @@ getData((photos) => {
   ));
 });
 
-setUserFormSubmit(closeRedactorPhoto);
+setUserFormSubmit(onSuccessFormSend,  onErrorFormSend);
