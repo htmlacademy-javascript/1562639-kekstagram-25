@@ -276,6 +276,7 @@ pristine.addValidator(hashtagsInput, validateHashtags);
 
 //Сообщение об успешной загрузке фотографии
 const successMessage = successMessageTemplate.cloneNode(true);
+const successButton = successMessage.querySelector('.success__button');
 
 const onSuccessMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -297,12 +298,12 @@ function closeSuccessMessage () {
 }
 
 successMessage.addEventListener('click', (evt) => {
-  if ( !evt.target.closest('success__inner') ) {
+  if ( !evt.target.closest('.success__inner') ) {
     closeSuccessMessage();
   }
 });
 
-//successButton.addEventListener('click', closeSuccessMessage);
+successButton.addEventListener('click', closeSuccessMessage);
 
 const onSuccessFormSend = () => {
   closeRedactorPhoto();
@@ -311,6 +312,7 @@ const onSuccessFormSend = () => {
 
 //Сообщение о неудачной загрузке фотографиии
 const errorMessage = errorMessageTemplate.cloneNode(true);
+const errorButton = errorMessage.querySelector('.error__button');
 
 const onErrorMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -332,10 +334,12 @@ function closeErrorMessage () {
 }
 
 errorMessage.addEventListener('click', (evt) => {
-  if ( !evt.target.closest('error__inner') ) {
+  if ( !evt.target.closest('.error__inner') ) {
     closeErrorMessage();
   }
 });
+
+errorButton.addEventListener('click', closeErrorMessage);
 
 const onErrorFormSend = () => {
   closeRedactorPhoto();
