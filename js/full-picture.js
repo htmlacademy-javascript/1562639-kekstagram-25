@@ -1,5 +1,7 @@
 import { isEscapeKey } from './util.js';
 
+const COMMENTS_STEP = 5;
+let onShowMoreComments;
 
 const bigPicture = document.querySelector('.big-picture');
 const commentItem = bigPicture.querySelector('.social__comment');
@@ -9,13 +11,10 @@ const commentLoader = bigPicture.querySelector('.social__comments-loader');
 const commentsCountStart = bigPicture.querySelector('#comments__counter');
 const closeModalButton = document.querySelector('.big-picture__cancel');
 
-const COMMENTS_STEP = 5;
-let onShowMoreComments;
-
 const onPopupEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeUserModal();
+    onCloseUserModal();
   }
 };
 
@@ -27,7 +26,7 @@ const openUserModal = () => {
   document.addEventListener('keydown', onPopupEscKeydown);
 };
 
-function closeUserModal () {
+function onCloseUserModal () {
   bigPicture.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
 
@@ -91,6 +90,6 @@ const onThumbnailClick = (thumbnail, photoData) => {
   });
 };
 
-closeModalButton.addEventListener('click', closeUserModal);
+closeModalButton.addEventListener('click', onCloseUserModal);
 
 export {onThumbnailClick};

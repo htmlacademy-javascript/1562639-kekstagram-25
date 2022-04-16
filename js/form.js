@@ -73,13 +73,13 @@ const pristine = new Pristine(form, {
 const onRedactorEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeRedactorPhoto();
+    onCloseRedactorPhoto();
   }
 };
 
 const onInputKeydown = (evt) => evt.stopPropagation();
 
-const openRedactorPhoto = () => {
+const onOpenRedactorPhoto = () => {
   resetEnteredData();
   uploadOverlay.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
@@ -89,7 +89,7 @@ const openRedactorPhoto = () => {
   document.addEventListener('keydown', onRedactorEscKeydown);
 };
 
-function closeRedactorPhoto () {
+function onCloseRedactorPhoto () {
   uploadOverlay.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
 
@@ -102,9 +102,9 @@ function closeRedactorPhoto () {
   document.removeEventListener('keydown', onRedactorEscKeydown);
 }
 
-uploadFileInput.addEventListener('change', openRedactorPhoto);
+uploadFileInput.addEventListener('change', onOpenRedactorPhoto);
 
-uploadCancelButton.addEventListener('click', closeRedactorPhoto);
+uploadCancelButton.addEventListener('click', onCloseRedactorPhoto);
 
 //Изменение масштаба изображения
 controlSmaller.addEventListener('click', () => {
@@ -228,12 +228,12 @@ const onEffectClick = (evt) => {
   sliderElement.noUiSlider.updateOptions(effectsSettings[effectValue]);
 };
 
-for (let i = 0; i < effectsItems.length; i++) {
-  effectsItems[i].addEventListener('click', onEffectClick);
-}
+effectsItems.forEach((effectsItem) => {
+  effectsItem.addEventListener('click', onEffectClick);
+});
 
 //Валидация хэштега
-const validateFormat = (hashtags) => {
+function validateFormat(hashtags) {
   const re = new RegExp('^#[A-Za-zА-Яа-яЁё0-9]{1,19}$');
   if (hashtagsInput.value !== '') {
     for (let i = 0; i < hashtags.length; i++) {
@@ -244,7 +244,7 @@ const validateFormat = (hashtags) => {
     }
   }
   return true;
-};
+}
 
 const validateUniqueness = (hashtags) => {
   const uniqHashtags = new Set(hashtags);
@@ -281,7 +281,7 @@ const successButton = successMessage.querySelector('.success__button');
 const onSuccessMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeSuccessMessage();
+    onCloseSuccessMessage();
   }
 };
 
@@ -291,7 +291,7 @@ const openSuccessMessage = () => {
   document.addEventListener('keydown', onSuccessMessageEscKeydown);
 };
 
-function closeSuccessMessage () {
+function onCloseSuccessMessage () {
   document.body.removeChild(successMessage);
 
   document.removeEventListener('keydown', onSuccessMessageEscKeydown);
@@ -299,14 +299,14 @@ function closeSuccessMessage () {
 
 successMessage.addEventListener('click', (evt) => {
   if ( !evt.target.closest('.success__inner') ) {
-    closeSuccessMessage();
+    onCloseSuccessMessage();
   }
 });
 
-successButton.addEventListener('click', closeSuccessMessage);
+successButton.addEventListener('click', onCloseSuccessMessage);
 
 const onSuccessFormSend = () => {
-  closeRedactorPhoto();
+  onCloseRedactorPhoto();
   openSuccessMessage();
 };
 
@@ -317,7 +317,7 @@ const errorButton = errorMessage.querySelector('.error__button');
 const onErrorMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeErrorMessage();
+    onCloseErrorMessage();
   }
 };
 
@@ -327,7 +327,7 @@ const openErrorMessage = () => {
   document.addEventListener('keydown', onErrorMessageEscKeydown);
 };
 
-function closeErrorMessage () {
+function onCloseErrorMessage () {
   document.body.removeChild(errorMessage);
 
   document.removeEventListener('keydown', onErrorMessageEscKeydown);
@@ -335,14 +335,14 @@ function closeErrorMessage () {
 
 errorMessage.addEventListener('click', (evt) => {
   if ( !evt.target.closest('.error__inner') ) {
-    closeErrorMessage();
+    onCloseErrorMessage();
   }
 });
 
-errorButton.addEventListener('click', closeErrorMessage);
+errorButton.addEventListener('click', onCloseErrorMessage);
 
 const onErrorFormSend = () => {
-  closeRedactorPhoto();
+  onCloseRedactorPhoto();
   openErrorMessage();
 };
 

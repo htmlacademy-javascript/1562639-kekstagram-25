@@ -1,6 +1,8 @@
 import { onThumbnailClick } from './full-picture.js';
 import { shuffleArray } from './util.js';
 
+const NUMBER_RANDOM_PHOTOS = 10;
+
 const userPictures = document.querySelector('.pictures');
 const userPictureTemplate = document.querySelector('#picture')
   .content
@@ -8,7 +10,6 @@ const userPictureTemplate = document.querySelector('#picture')
 const filters = document.querySelector('.img-filters');
 const filterRandom = document.querySelector('#filter-random');
 const filterDiscussed = document.querySelector('#filter-discussed');
-const NUMBER_RANDOM_PHOTOS = 10;
 
 const setFiltersClick = (cb) => {
   document.querySelector('.img-filters__form').addEventListener('click', (evt) => {
@@ -38,9 +39,9 @@ const renderSimilarPhoto = (photos) => {
 
   const thumbnails = document.querySelectorAll('.picture');
 
-  for (let i = 0; i < thumbnails.length; i++) {
-    onThumbnailClick(thumbnails[i], photos[i]);
-  }
+  thumbnails.forEach((thumbnail, i) => {
+    onThumbnailClick(thumbnail, photos[i]);
+  });
 
   filters.classList.remove('img-filters--inactive');
 };
