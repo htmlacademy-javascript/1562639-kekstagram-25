@@ -1,12 +1,12 @@
 //Функция для перемешивания элементов массива
 
-const shuffleArray = (array) => {
-  const tempArray = [...array]; //клонируем наш массив
-  for (let i = tempArray.length - 1; i > 0; i--) {  //перемешиваем
+const shuffleArray = (items) => {
+  const tempItems = [...items]; //клонируем наш массив
+  for (let i = tempItems.length - 1; i > 0; i--) {  //перемешиваем
     const j = Math.floor(Math.random() * (i + 1));
-    [tempArray[i], tempArray[j]] = [tempArray[j], tempArray[i]];
+    [tempItems[i], tempItems[j]] = [tempItems[j], tempItems[i]];
   }
-  return tempArray;
+  return tempItems;
 };
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
@@ -32,9 +32,9 @@ const showErrorMessage = (message) => {
 
 const debounce = (callback, timeoutDelay) => {
   let timeoutId;
-  return (...rest) => {
+  return (...others) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+    timeoutId = setTimeout(() => callback.apply(this, others), timeoutDelay);
   };
 };
 
